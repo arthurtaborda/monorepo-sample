@@ -1,1 +1,0 @@
-/home/arthurtaborda/Samples/monorepo-sample/libraries/string-lib/build/classes/kotlin/main/library/stringlib/StringPair.class
