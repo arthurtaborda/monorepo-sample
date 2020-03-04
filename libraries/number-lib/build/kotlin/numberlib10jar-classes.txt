@@ -1,0 +1,1 @@
+/home/arthurtaborda/Samples/monorepo-sample/libraries/number-lib/build/classes/kotlin/main/library/numberlib/NumberPair.class
