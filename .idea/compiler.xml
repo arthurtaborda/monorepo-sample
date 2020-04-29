@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="1.6">
+      <module name="client.main" target="11" />
+      <module name="client.test" target="11" />
+      <module name="common.main" target="11" />
+      <module name="common.test" target="11" />
+      <module name="gradle-versioning-plugin.main" target="11" />
+      <module name="gradle-versioning-plugin.test" target="11" />
+      <module name="logging.main" target="11" />
+      <module name="logging.test" target="11" />
+      <module name="monorepo-plugin" target="11" />
+      <module name="monorepo-plugin.main" target="11" />
+      <module name="monorepo-plugin.test" target="11" />
+      <module name="server.main" target="11" />
+      <module name="server.test" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
