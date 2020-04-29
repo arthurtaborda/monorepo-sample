@@ -1,0 +1,41 @@
+name: ci
+
+on: push
+
+env:
+  GRADLE_OPTS: '-Xmx1024m -Dorg.gradle.daemon=false -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true'
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - run: git fetch --prune --unshallow # get all history
+      - name: check if should build
+        run: echo "::set-env name=PROJECTS_TO_BUILD::$(./tools/ci/core/list-projects-to-build.sh)"
+      - uses: actions/cache@v1
+        name: gradle cache
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-cache-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+      - uses: actions/cache@v1
+        name: gradle wrapper
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+      - name: test services/server
+        if: contains(env.PROJECTS_TO_BUILD, 'services/server')
+        run: ./gradlew -p services/server test
+      - name: test services/client
+        if: contains(env.PROJECTS_TO_BUILD, 'services/client')
+        run: ./gradlew -p services/client test
+      - name: test libraries/logging
+        if: contains(env.PROJECTS_TO_BUILD, 'libraries/logging')
+        run: ./gradlew -p libraries/logging test
+      - name: test libraries/common
+        if: contains(env.PROJECTS_TO_BUILD, 'libraries/common')
+        run: ./gradlew -p libraries/common test
+      - name: test tools/gradle-plugins/gradle-hello-plugin
+        if: contains(env.PROJECTS_TO_BUILD, 'tools/gradle-plugins/gradle-hello-plugin')
+        run: ./gradlew -p tools/gradle-plugins/gradle-hello-plugin test
