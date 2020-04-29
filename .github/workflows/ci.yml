@@ -12,8 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - run: git fetch --prune --unshallow # get all history
-      - name: check if should build
-        run: echo "::set-env name=PROJECTS_TO_BUILD::$(./tools/ci/core/list-projects-to-build.sh)"
+      - name: check which projects should be tested
+        run: echo "::set-env name=PROJECTS_TO_BUILD::$(./tools/ci/list-projects-to-build.sh)"
       - uses: actions/cache@v1
         name: gradle cache
         with:
