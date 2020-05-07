@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - run: alias build="go run tools/monorepo/monorepo.go"
       - run: git fetch --prune --unshallow # get all history
       - uses: actions/cache@v1
         name: gradle cache
@@ -26,8 +25,8 @@ jobs:
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-      - run: build -path=services/server -command="./gradlew -p services/server test"
-      - run: build -path=services/client -command="./gradlew -p services/client test"
-      - run: build -path=libraries/logging -command="./gradlew -p libraries/logging test"
-      - run: build -path=libraries/common -command="./gradlew -p libraries/common test"
-      - run: build -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin test"
+      - run: go run tools/monorepo/monorepo.go -path=services/server -command="./gradlew -p services/server test"
+      - run: go run tools/monorepo/monorepo.go -path=services/client -command="./gradlew -p services/client test"
+      - run: go run tools/monorepo/monorepo.go -path=libraries/logging -command="./gradlew -p libraries/logging test"
+      - run: go run tools/monorepo/monorepo.go -path=libraries/common -command="./gradlew -p libraries/common test"
+      - run: go run tools/monorepo/monorepo.go -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin test"
