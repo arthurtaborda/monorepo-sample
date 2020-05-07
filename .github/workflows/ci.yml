@@ -12,8 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - run: git fetch --prune --unshallow # get all history
-      - name: check which projects should be tested
-        run: echo "::set-env name=PROJECTS_TO_BUILD::$(./tools/ci/list-projects-to-build.sh)"
       - uses: actions/cache@v1
         name: gradle cache
         with:
@@ -24,18 +22,8 @@ jobs:
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-      - name: test services/server
-        if: contains(env.PROJECTS_TO_BUILD, 'services/server')
-        run: ./gradlew -p services/server test
-      - name: test services/client
-        if: contains(env.PROJECTS_TO_BUILD, 'services/client')
-        run: ./gradlew -p services/client test
-      - name: test libraries/logging
-        if: contains(env.PROJECTS_TO_BUILD, 'libraries/logging')
-        run: ./gradlew -p libraries/logging test
-      - name: test libraries/common
-        if: contains(env.PROJECTS_TO_BUILD, 'libraries/common')
-        run: ./gradlew -p libraries/common test
-      - name: test tools/gradle-plugins/gradle-hello-plugin
-        if: contains(env.PROJECTS_TO_BUILD, 'tools/gradle-plugins/gradle-hello-plugin')
-        run: ./gradlew -p tools/gradle-plugins/gradle-hello-plugin test
+      - run: ./monorepo -path=services/server -command="./gradlew -p services/server test assemble"
+      - run: ./monorepo -path=services/client -command="./gradlew -p services/client test assemble"
+      - run: ./monorepo -path=libraries/logging -command="./gradlew -p libraries/logging test assemble"
+      - run: ./monorepo -path=libraries/common -command="./gradlew -p libraries/common test assemble"
+      - run: ./monorepo -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin test assemble"
