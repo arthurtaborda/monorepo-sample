@@ -1,9 +1,10 @@
-name: ci
+name: pull_request
 
 on:
   push:
     branches:
-      - 'master'
+      - '*'
+      - '!master'
 
 env:
   GRADLE_OPTS: '-Xmx1024m -Dorg.gradle.daemon=false -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true'
@@ -25,8 +26,8 @@ jobs:
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-      - run: build -path=services/server -command="./gradlew -p services/server assemble"
-      - run: build -path=services/client -command="./gradlew -p services/client assemble"
-      - run: build -path=libraries/logging -command="./gradlew -p libraries/logging assemble"
-      - run: build -path=libraries/common -command="./gradlew -p libraries/common assemble"
-      - run: build -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin assemble"
+      - run: build -path=services/server -command="./gradlew -p services/server test"
+      - run: build -path=services/client -command="./gradlew -p services/client test"
+      - run: build -path=libraries/logging -command="./gradlew -p libraries/logging test"
+      - run: build -path=libraries/common -command="./gradlew -p libraries/common test"
+      - run: build -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin test"
