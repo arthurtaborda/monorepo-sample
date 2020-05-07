@@ -1,0 +1,30 @@
+language: java
+dist: bionic
+
+jdk:
+  - openjdk11
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+jobs:
+  include:
+    - stage: test
+      name: test changed modules
+      script:
+        - go run tools/monorepo/monorepo.go -path=services/server -command="./gradlew -p services/server test assemble"
+        - go run tools/monorepo/monorepo.go -path=services/client -command="./gradlew -p services/client test assemble"
+        - go run tools/monorepo/monorepo.go -path=libraries/logging -command="./gradlew -p libraries/logging test assemble"
+        - go run tools/monorepo/monorepo.go -path=libraries/common -command="./gradlew -p libraries/common test assemble"
+        - go run tools/monorepo/monorepo.go -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin test assemble"
+
+env:
+  global:
+    - GRADLE_OPTS='-Xmx1024m -Dorg.gradle.daemon=false -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true'
+    - JAVA_OPTS='-Xmx1024m'
