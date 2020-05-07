@@ -4,6 +4,7 @@ object Commons {
 
     @JvmStatic
     fun tellMeWhoWeAre(): String {
+        println("Calling commons")
         return "We are just samples!"
     }
 }
