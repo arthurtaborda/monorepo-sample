@@ -23,11 +23,11 @@ jobs:
         - echo "TRAVIS_PULL_REQUEST_BRANCH=$TRAVIS_PULL_REQUEST_BRANCH"
         - echo "TRAVIS_PULL_REQUEST_SHA=$TRAVIS_PULL_REQUEST_SHA"
         - echo "TRAVIS_COMMIT=$TRAVIS_COMMIT"
-        - go run tools/monorepo/monorepo.go -path=services/server -command="./gradlew -p services/server test assemble"
-        - go run tools/monorepo/monorepo.go -path=services/client -command="./gradlew -p services/client test assemble"
-        - go run tools/monorepo/monorepo.go -path=libraries/logging -command="./gradlew -p libraries/logging test assemble"
-        - go run tools/monorepo/monorepo.go -path=libraries/common -command="./gradlew -p libraries/common test assemble"
-        - go run tools/monorepo/monorepo.go -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin test assemble"
+        - go run tools/monorepo/monorepo.go -commitRange=$TRAVIS_COMMIT_RANGE -path=services/server -command="./gradlew -p services/server test assemble"
+        - go run tools/monorepo/monorepo.go -commitRange=$TRAVIS_COMMIT_RANGE -path=services/client -command="./gradlew -p services/client test assemble"
+        - go run tools/monorepo/monorepo.go -commitRange=$TRAVIS_COMMIT_RANGE -path=libraries/logging -command="./gradlew -p libraries/logging test assemble"
+        - go run tools/monorepo/monorepo.go -commitRange=$TRAVIS_COMMIT_RANGE -path=libraries/common -command="./gradlew -p libraries/common test assemble"
+        - go run tools/monorepo/monorepo.go -commitRange=$TRAVIS_COMMIT_RANGE -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin test assemble"
 
 env:
   global:

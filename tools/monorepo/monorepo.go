@@ -65,38 +65,44 @@ func runCommandAttached(cmd string, errorMessage string) error {
 func main() {
 	var path string
 	var command string
+	var commitRange string
 	flag.StringVar(&path, "path", "", "The path of the service that should be built")
 	flag.StringVar(&command, "command", "", "The command that should run if the path changed")
+	flag.StringVar(&commitRange, "commitRange", "", "The commit range to be used to check if the path changed")
 
 	flag.Parse()
 
 	fmt.Println("path:", path)
 	fmt.Println("command:", command)
+	fmt.Println("commitRange:", commitRange)
 
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		fmt.Printf("Project in path %s does not exist", path)
 		return
 	}
 
-	currentBranch, _ := runCommand("git rev-parse --abbrev-ref HEAD", "Couldn't get current branch")
-	headHash, _ := runCommand("git rev-parse HEAD", "Couldn't get head hash")
+	if commitRange == "" {
+		currentBranch, _ := runCommand("git rev-parse --abbrev-ref HEAD", "Couldn't get current branch")
+		headHash, _ := runCommand("git rev-parse HEAD", "Couldn't get head hash")
 
-	hashToCompare := ""
-	if currentBranch == "master" {
-		hashToCompare, _ = runCommand("git rev-parse "+headHash+"~1", "Couldn't get previous git hash")
-	} else {
-		hashToCompare, _ = runCommand("git rev-parse origin/master", "Couldn't get master hash")
+		hashToCompare := ""
+		if currentBranch == "master" {
+			hashToCompare, _ = runCommand("git rev-parse "+headHash+"~1", "Couldn't get previous git hash")
+		} else {
+			hashToCompare, _ = runCommand("git rev-parse origin/master", "Couldn't get master hash")
+		}
+
+		commitRange = hashToCompare + ".." + headHash
+
+		fmt.Println("currentBranch:", currentBranch)
+		fmt.Println("headHash:", headHash)
+		fmt.Println("hashToCompare:", hashToCompare)
+		fmt.Println("commitRange:", commitRange)
 	}
-
-	commitRange := hashToCompare + ".." + headHash
 
 	changedPathsCmd, _ := runCommand("git diff --name-only "+commitRange, "Couldn't get changed paths")
 	changedPaths := strings.Split(changedPathsCmd, "\n")
 
-	fmt.Println("currentBranch:", currentBranch)
-	fmt.Println("headHash:", headHash)
-	fmt.Println("hashToCompare:", hashToCompare)
-	fmt.Println("commitRange:", commitRange)
 	fmt.Println("changedPaths:", changedPaths)
 
 	//config := MonorepoConfig{}
