@@ -1,9 +1,10 @@
-name: ci
+name: pull_request
 
 on:
   push:
     branches:
-      - 'master'
+      - '*'
+      - '!master'
 
 env:
   GRADLE_OPTS: '-Xmx1024m -Dorg.gradle.daemon=false -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true'
@@ -24,8 +25,8 @@ jobs:
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-      - run: go run tools/monorepo/monorepo.go -path=services/server -command="./gradlew -p services/server assemble"
-      - run: go run tools/monorepo/monorepo.go -path=services/client -command="./gradlew -p services/client assemble"
-      - run: go run tools/monorepo/monorepo.go -path=libraries/logging -command="./gradlew -p libraries/logging assemble"
-      - run: go run tools/monorepo/monorepo.go -path=libraries/common -command="./gradlew -p libraries/common assemble"
-      - run: go run tools/monorepo/monorepo.go -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin assemble"
+      - run: go run tools/monorepo/monorepo.go -path=services/server -command="./gradlew -p services/server test"
+      - run: go run tools/monorepo/monorepo.go -path=services/client -command="./gradlew -p services/client test"
+      - run: go run tools/monorepo/monorepo.go -path=libraries/logging -command="./gradlew -p libraries/logging test"
+      - run: go run tools/monorepo/monorepo.go -path=libraries/common -command="./gradlew -p libraries/common test"
+      - run: go run tools/monorepo/monorepo.go -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin test"

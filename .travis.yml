@@ -25,19 +25,19 @@ jobs:
       name: test changed modules
       if: type == pull_request
       script:
-        - ./monorepo -path=services/server -command="./gradlew -p services/server test"  -commitRange=$TRAVIS_COMMIT_RANGE
-        - ./monorepo -path=services/client -command="./gradlew -p services/client test"  -commitRange=$TRAVIS_COMMIT_RANGE
-        - ./monorepo -path=libraries/logging -command="./gradlew -p libraries/logging test"  -commitRange=$TRAVIS_COMMIT_RANGE
-        - ./monorepo -path=libraries/common -command="./gradlew -p libraries/common test"  -commitRange=$TRAVIS_COMMIT_RANGE
-        - ./monorepo -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin test"  -commitRange=$TRAVIS_COMMIT_RANGE
+        - go run tools/monorepo/monorepo.go -path=services/server -command="./gradlew -p services/server test"  -commitRange=$TRAVIS_COMMIT_RANGE
+        - go run tools/monorepo/monorepo.go -path=services/client -command="./gradlew -p services/client test"  -commitRange=$TRAVIS_COMMIT_RANGE
+        - go run tools/monorepo/monorepo.go -path=libraries/logging -command="./gradlew -p libraries/logging test"  -commitRange=$TRAVIS_COMMIT_RANGE
+        - go run tools/monorepo/monorepo.go -path=libraries/common -command="./gradlew -p libraries/common test"  -commitRange=$TRAVIS_COMMIT_RANGE
+        - go run tools/monorepo/monorepo.go -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin test"  -commitRange=$TRAVIS_COMMIT_RANGE
 
     - stage: build
       install: skip
       name: build changed modules
       if: type != pull_request
       script:
-        - ./monorepo -path=services/server -command="./gradlew -p services/server assemble" -commitRange=$TRAVIS_COMMIT_RANGE
-        - ./monorepo -path=services/client -command="./gradlew -p services/client assemble" -commitRange=$TRAVIS_COMMIT_RANGE
-        - ./monorepo -path=libraries/logging -command="./gradlew -p libraries/logging assemble" -commitRange=$TRAVIS_COMMIT_RANGE
-        - ./monorepo -path=libraries/common -command="./gradlew -p libraries/common assemble" -commitRange=$TRAVIS_COMMIT_RANGE
-        - ./monorepo -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin assemble" -commitRange=$TRAVIS_COMMIT_RANGE
+        - go run tools/monorepo/monorepo.go -path=services/server -command="./gradlew -p services/server assemble" -commitRange=$TRAVIS_COMMIT_RANGE
+        - go run tools/monorepo/monorepo.go -path=services/client -command="./gradlew -p services/client assemble" -commitRange=$TRAVIS_COMMIT_RANGE
+        - go run tools/monorepo/monorepo.go -path=libraries/logging -command="./gradlew -p libraries/logging assemble" -commitRange=$TRAVIS_COMMIT_RANGE
+        - go run tools/monorepo/monorepo.go -path=libraries/common -command="./gradlew -p libraries/common assemble" -commitRange=$TRAVIS_COMMIT_RANGE
+        - go run tools/monorepo/monorepo.go -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin assemble" -commitRange=$TRAVIS_COMMIT_RANGE
