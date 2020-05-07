@@ -39,6 +39,7 @@ import (
 //}
 
 func runCommand(cmd string, errorMessage string) (string, error) {
+	fmt.Println("executing command:", cmd)
 	commandSplit := strings.Split(cmd, " ")
 	command := exec.Command(commandSplit[0], commandSplit[1:]...)
 
@@ -112,10 +113,10 @@ func main() {
 	}
 
 	if shouldBuild {
-		fmt.Printf("Building project in path %s", path)
+		fmt.Printf("Building project in path %s\n", path)
 		_ = runCommandAttached(command, "Couldn't build project")
 	} else {
-		fmt.Printf("Project in path %s didn't change, skipping...", path)
+		fmt.Printf("Project in path %s didn't change, skipping...\n", path)
 	}
 
 	//projectsToTest := make(map[string]Project)
