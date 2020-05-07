@@ -22,8 +22,8 @@ jobs:
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
-      - run: go run tools/monorepo/monorepo.go -path=services/server -command="./gradlew -p services/server test assemble"
-      - run: go run tools/monorepo/monorepo.go -path=services/client -command="./gradlew -p services/client test assemble"
-      - run: go run tools/monorepo/monorepo.go -path=libraries/logging -command="./gradlew -p libraries/logging test assemble"
-      - run: go run tools/monorepo/monorepo.go -path=libraries/common -command="./gradlew -p libraries/common test assemble"
-      - run: go run tools/monorepo/monorepo.go -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin test assemble"
+      - run: monorepo -path=services/server -command="./gradlew -p services/server test assemble"
+      - run: monorepo -path=services/client -command="./gradlew -p services/client test assemble"
+      - run: monorepo -path=libraries/logging -command="./gradlew -p libraries/logging test assemble"
+      - run: monorepo -path=libraries/common -command="./gradlew -p libraries/common test assemble"
+      - run: monorepo -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin test assemble"

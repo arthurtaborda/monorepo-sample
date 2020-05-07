@@ -13,23 +13,31 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
-jobs:
-  include:
-    - stage: test
-      name: test changed modules
-      script:
-        - echo "TRAVIS_COMMIT_RANGE=$TRAVIS_COMMIT_RANGE"
-        - echo "TRAVIS_PULL_REQUEST=$TRAVIS_PULL_REQUEST"
-        - echo "TRAVIS_PULL_REQUEST_BRANCH=$TRAVIS_PULL_REQUEST_BRANCH"
-        - echo "TRAVIS_PULL_REQUEST_SHA=$TRAVIS_PULL_REQUEST_SHA"
-        - echo "TRAVIS_COMMIT=$TRAVIS_COMMIT"
-        - go run tools/monorepo/monorepo.go -commitRange=$TRAVIS_COMMIT_RANGE -path=services/server -command="./gradlew -p services/server test assemble"
-        - go run tools/monorepo/monorepo.go -commitRange=$TRAVIS_COMMIT_RANGE -path=services/client -command="./gradlew -p services/client test assemble"
-        - go run tools/monorepo/monorepo.go -commitRange=$TRAVIS_COMMIT_RANGE -path=libraries/logging -command="./gradlew -p libraries/logging test assemble"
-        - go run tools/monorepo/monorepo.go -commitRange=$TRAVIS_COMMIT_RANGE -path=libraries/common -command="./gradlew -p libraries/common test assemble"
-        - go run tools/monorepo/monorepo.go -commitRange=$TRAVIS_COMMIT_RANGE -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin test assemble"
-
 env:
   global:
     - GRADLE_OPTS='-Xmx1024m -Dorg.gradle.daemon=false -Dorg.gradle.caching=true -Dorg.gradle.configureondemand=true -Dorg.gradle.parallel=true'
     - JAVA_OPTS='-Xmx1024m'
+
+jobs:
+  include:
+    - stage: test
+      install: skip
+      name: test changed modules
+      if: type == pull_request
+      script:
+        - monorepo -path=services/server -command="./gradlew -p services/server test"  -commitRange=$TRAVIS_COMMIT_RANGE
+        - monorepo -path=services/client -command="./gradlew -p services/client test"  -commitRange=$TRAVIS_COMMIT_RANGE
+        - monorepo -path=libraries/logging -command="./gradlew -p libraries/logging test"  -commitRange=$TRAVIS_COMMIT_RANGE
+        - monorepo -path=libraries/common -command="./gradlew -p libraries/common test"  -commitRange=$TRAVIS_COMMIT_RANGE
+        - monorepo -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin test"  -commitRange=$TRAVIS_COMMIT_RANGE
+
+    - stage: build
+      install: skip
+      name: build changed modules
+      if: type != pull_request
+      script:
+        - monorepo -path=services/server -command="./gradlew -p services/server assemble" -commitRange=$TRAVIS_COMMIT_RANGE
+        - monorepo -path=services/client -command="./gradlew -p services/client assemble" -commitRange=$TRAVIS_COMMIT_RANGE
+        - monorepo -path=libraries/logging -command="./gradlew -p libraries/logging assemble" -commitRange=$TRAVIS_COMMIT_RANGE
+        - monorepo -path=libraries/common -command="./gradlew -p libraries/common assemble" -commitRange=$TRAVIS_COMMIT_RANGE
+        - monorepo -path=tools/gradle-plugins/gradle-hello-plugin -command="./gradlew -p tools/gradle-plugins/gradle-hello-plugin assemble" -commitRange=$TRAVIS_COMMIT_RANGE
